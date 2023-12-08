@@ -14,8 +14,8 @@ def shop(screen, width, height):
     line_colour = (165, 42, 42)
 
     # define lines
-    line1 = wc.Line(1, height - 705, width, height - 705, line_width, line_colour)
-    line2 = wc.Line(1, height - 650, width, height - 650, line_width, line_colour)
+    line1 = wc.Line(1, height - 705, width, height - 705, line_width, line_colour, screen)
+    line2 = wc.Line(1, height - 650, width, height - 650, line_width, line_colour, screen)
     
 
     # define font
