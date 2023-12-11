@@ -36,14 +36,13 @@ start_button_rect = start_button.rect
 quit_button = wc.Button(width/2 - 100, height - 175, 225, 60, border_colour, button_colour, screen)
 quit_button_rect = quit_button.rect
 
-
+pos = pygame.mouse.get_pos()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
             if start_button_rect.collidepoint(event.pos):
                 # Start the game logic here
                 print("Game started!")

@@ -55,6 +55,10 @@ class Button():
     self.button_colour[2] + 20
     ))
         self.filled = self.original
+        self.desc_box = False
+        if self.desc_box == True:
+            self.description = None 
+    
         
 
 
@@ -68,10 +72,10 @@ class Button():
     
     def with_text(self, text, font, font_size, colour, screen, bold=False):
         if bold == True:
-            text_font = pygame.font.SysFont(font, font_size, bold=True)
+            self.text_font = pygame.font.SysFont(font, font_size, bold=True)
         else:
-            text_font = pygame.font.SysFont(font, font_size)
-        text = text_font.render(text, True, colour)
+            self.text_font = pygame.font.SysFont(font, font_size)
+        text = self.text_font.render(text, True, colour)
         self.text_rect = text.get_rect(center= (self.x, self.y))
         self.screen.blit(text, (self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
     
@@ -79,10 +83,30 @@ class Button():
         pos = pygame.mouse.get_pos() 
         if self.rect.collidepoint(pos):
             self.filled = self.hover
+            #self.hover_desc(self.screen, self.description, pos)
         else:
             self.filled = self.original
+        
+        if self.desc_box == True:
+            self.hover_desc(self.screen, self.description, pos)
     def draw(self, screen):
         screen.blit(self.filled, self.rect)
+
+    def hover_desc(self, screen, text, pos):
+        GRAY = (200, 200, 200, 200)
+        x, y = pos
+        button_rect = self.rect
+        if button_rect.collidepoint(x, y):
+            font = pygame.font.SysFont('Corbel', 10)
+            description_text = font.render(text, True, (0, 0, 0))
+            box_rect = pygame.Rect(x, y - 30, description_text.get_width() + 10, description_text.get_height() + 10)
+            pygame.draw.rect(screen, GRAY, box_rect)
+            screen.blit(description_text, (x + 5, y - 25))
+            pygame.display.flip()
+    
+
+
+        
 
     
 class Rectangle:
