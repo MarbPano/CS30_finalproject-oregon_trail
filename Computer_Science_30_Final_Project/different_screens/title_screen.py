@@ -1,22 +1,27 @@
 import pygame
 import sys
 from time import sleep
-#import shop_screen as ss
+import window_creation as wc
+import character_screen as cs
 
+  
 pygame.init()
+
+title_background = pygame.image.load('different_screens\images\Title-f.png')
 
 # screen resolution
 res = (720, 720)
 
 # open the window
-screen = pygame.display.set_mode(res)
+screen = pygame.display.set_mode(size=(res))#, flags=pygame.FULLSCREEN)
 
-# marroon background for SHS acquiantancy 
-color = (165, 42, 42)
+# font colour
+text_colour = (255, 248, 220)
+title_colour = (0, 100, 0)
 
 # shades for button
-color_light = (170,170,170)
-color_dark = (100,100,100)
+border_colour = (80, 80, 80)
+button_colour = (101, 67, 33)
 
 # width of screen
 width = screen.get_width()
@@ -24,66 +29,46 @@ width = screen.get_width()
 # height of screen
 height = screen.get_height()
 
-# define font
-title_font = pygame.font.SysFont('Corbel', 70, bold=True)
-smallfont = pygame.font.SysFont('Corbel',35)
+# creating text and buttons
+title_text = wc.Text('Woodrunners', width/2, height/3 - 150, 'different_screens\Fonts\ANDYB.TTF', 125, title_colour, screen, bold=True)
+start_button = wc.Button(width/2 - 100, height - 250, 225, 60, border_colour, button_colour, screen)
+start_button_rect = start_button.rect
+quit_button = wc.Button(width/2 - 100, height - 175, 225, 60, border_colour, button_colour, screen)
+quit_button_rect = quit_button.rect
 
-
-# render text
-title_text = title_font.render('Oregon Trail', True, (255, 140, 00))
-start_text = smallfont.render('Start Game', True, color)
-quit_text = smallfont.render('Quit Game', True, color)
-fullscreen_text = smallfont.render('Toggle Fullscreen', True, color)
+# mouse position
+pos = pygame.mouse.get_pos()
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        
+        # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if width/2 - 100 <= event.pos[0] <= width/2 + 100 and height/2 - 50 <= event.pos[1] <= height/2:
+            if start_button_rect.collidepoint(event.pos):
                 # Start the game logic here
                 print("Game started!")
                 sleep(2)
-                #ss.shop()
-            elif width/2 - 100 <= event.pos[0] <= width/2 + 100 and height/2 <= event.pos[1] <= height/2 + 50:
+                cs.choices(screen, width, height)
+            elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
-                sys.exit()
-            # a toggle full screen button at the bottom right
-            elif width - 50 <= event.pos[0] <= width and height - 50 <= event.pos[1] <= height:
-                screen = pygame.display.toggle_fullscreen()
+                sys.exit()      
 
-    #fill background
-    screen.fill((60,26,60))
+    #fill background with the title_background
+    screen.blit((title_background), (0,0))
+    
+    # draw the texts
+    title_text.draw(screen)
+    start_button.draw(screen)
+    start_button.with_text('Start Game','Corbel', 35, text_colour, screen, bold=True)
+    start_button.update()
+    quit_button.draw(screen)
+    quit_button.with_text('Quit Game','Corbel', 35, text_colour, screen, bold=True)
+    quit_button.update()
 
- # Draw the title text
-    title_text_rect = title_text.get_rect(center=(width/2, height/3))
-    screen.blit(title_text, title_text_rect.topleft)
-
- # Draw the start game button
-    start_button_rect = pygame.Rect(width/2 - 100, height/2 - 50, 200, 50)
-    pygame.draw.rect(screen, color_light, start_button_rect)
-    pygame.draw.rect(screen, color_dark, start_button_rect, 3)
-    start_text_rect = start_text.get_rect(center=start_button_rect.center)
-    screen.blit(start_text, start_text_rect.topleft)
-
-  # Draw the quit button
-    quit_button_rect = pygame.Rect(width/2 - 100, height/2, 200, 50)
-    pygame.draw.rect(screen, color_light, quit_button_rect)
-    pygame.draw.rect(screen, color_dark, quit_button_rect, 3)
-    quit_text_rect = quit_text.get_rect(center=quit_button_rect.center)
-    screen.blit(quit_text, quit_text_rect.topleft)
-
-    # fullscreen button
-    fullscreen_button_rect = pygame.Rect(width - 50, height - 50, 50, 50)
-    pygame.draw.rect(screen, color_light, fullscreen_button_rect)
-    pygame.draw.rect(screen, color_dark, fullscreen_button_rect, 3)
-    fullscreen_text_rect = fullscreen_text.get_rect(center=fullscreen_button_rect.center)
-    screen.blit(fullscreen_text, fullscreen_text_rect.topleft)
-
-    # mouse position
-    mouse = pygame.mouse.get_pos()
 
     # update display
-    pygame.display.update()
+    pygame.display.flip()
 
