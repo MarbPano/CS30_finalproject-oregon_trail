@@ -29,19 +29,23 @@ width = screen.get_width()
 # height of screen
 height = screen.get_height()
 
+# creating text and buttons
 title_text = wc.Text('Woodrunners', width/2, height/3 - 150, 'different_screens\Fonts\ANDYB.TTF', 125, title_colour, screen, bold=True)
-
 start_button = wc.Button(width/2 - 100, height - 250, 225, 60, border_colour, button_colour, screen)
 start_button_rect = start_button.rect
 quit_button = wc.Button(width/2 - 100, height - 175, 225, 60, border_colour, button_colour, screen)
 quit_button_rect = quit_button.rect
 
+# mouse position
 pos = pygame.mouse.get_pos()
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        
+        # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
             if start_button_rect.collidepoint(event.pos):
                 # Start the game logic here
@@ -53,7 +57,7 @@ while True:
                 sys.exit()      
 
     #fill background with the title_background
-    screen.blit(pygame.image.load('different_screens\images\Title-f.png'), (0,0))
+    screen.blit((title_background), (0,0))
     
     # draw the texts
     title_text.draw(screen)
