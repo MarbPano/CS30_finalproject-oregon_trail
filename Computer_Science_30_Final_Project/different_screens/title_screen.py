@@ -1,5 +1,6 @@
 import pygame
 import sys
+from os import path
 from time import sleep
 import window_creation as wc
 import character_screen as cs
@@ -7,7 +8,8 @@ import character_screen as cs
   
 pygame.init()
 
-title_background = pygame.image.load('different_screens\images\Title-f.png')
+img_dir = path.join(path.dirname(__file__), "images")
+title_background = pygame.image.load(path.join(img_dir, "Title-f.png"))
 
 # screen resolution
 res = (720, 720)
@@ -30,7 +32,9 @@ width = screen.get_width()
 height = screen.get_height()
 
 # creating text and buttons
-title_text = wc.Text('Woodrunners', width/2, height/3 - 150, 'different_screens\Fonts\ANDYB.TTF', 125, title_colour, screen, bold=True)
+font_dir = path.join(path.dirname(__file__), "Fonts")
+title_text = wc.Text('Woodrunners', width/2, height/3 - 150, (path.join(font_dir, "ANDYB.TTF")), 125, title_colour, screen, bold=True)
+
 start_button = wc.Button(width/2 - 100, height - 250, 225, 60, border_colour, button_colour, screen)
 start_button_rect = start_button.rect
 quit_button = wc.Button(width/2 - 100, height - 175, 225, 60, border_colour, button_colour, screen)
@@ -54,7 +58,8 @@ while True:
                 cs.choices(screen, width, height)
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
-                sys.exit()      
+                sys.exit()
+         
 
     #fill background with the title_background
     screen.blit((title_background), (0,0))
