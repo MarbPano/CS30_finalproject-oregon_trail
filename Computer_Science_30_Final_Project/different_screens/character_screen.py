@@ -1,12 +1,15 @@
 import pygame
 import window_creation as wc
+import shop_screen as sc
+import classes_player as cp
 from time import sleep
+from os import path
 
-def choices(screen, width, height):
+def choices(screen, width, height, player_name):
     border_colour = (80, 80, 80)
 
-    background = pygame.image.load('different_screens\images\Camp-f.png')
-    pos = pygame.mouse.get_pos()
+    img_dir = path.join(path.dirname(__file__), "images")
+    background = pygame.image.load(path.join(img_dir, 'Camp-f.png'))
 
     # creating buttons for each character choice
     Voyaguer = wc.Button(width/2 - 350, height - 360, 200, 70, border_colour, (0, 0, 139), screen)
@@ -17,8 +20,9 @@ def choices(screen, width, height):
     Farmer_button_rect = Farmer.rect
 
     # title text
-    choose = wc.Text('Choose your', width/2, height/3 - 175, 'different_screens\Fonts\ANDYB.TTF', 100, (255, 255, 255), screen, bold=True)
-    choose_1 = wc.Text('Character', width/2, height/3 - 75, 'different_screens\Fonts\ANDYB.TTF', 100, (255, 255, 255), screen, bold=True)
+    font_dir = path.join(path.dirname(__file__), "Fonts")
+    choose = wc.Text('Choose your', width/2, height/3 - 175, (path.join(font_dir, 'ANDYB.TTF')), 100, (255, 255, 255), screen, bold=True)
+    choose_1 = wc.Text('Character', width/2, height/3 - 75, (path.join(font_dir, 'ANDYB.TTF')), 100, (255, 255, 255), screen, bold=True)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -30,18 +34,25 @@ def choices(screen, width, height):
                     # Start the game logic here
                     print("Game started!")
                     char_job = "Voyageur"
+                    user = cp.Player(player_name, char_job)
+                    sc.Shop(screen, width, height, player_name)
                     sleep(2)
                     
                 elif Hunter_button_rect.collidepoint(event.pos):
                     # Start the game logic here
                     print("Game started!")
                     char_job = "Hunter"
+                    print(player_name)
+                    user = cp.Player(player_name, char_job)
+                    sc.Shop(screen, width, height, player_name)
                     sleep(2)
                     
                 elif Farmer_button_rect.collidepoint(event.pos):
                     # Start the game logic here
                     print("Game started!")
                     char_job = "Farmer"
+                    user = cp.Player(player_name, char_job)
+                    sc.Shop(screen, width, height, player_name)
                     sleep(2)
                     
         # load the background
@@ -77,4 +88,4 @@ def choices(screen, width, height):
 #screen = pygame.display.set_mode(size=(720, 720))
 #width = screen.get_width()
 #height = screen.get_height()
-#choices(screen, width, height)
+#choices(screen, width, height, "Player")

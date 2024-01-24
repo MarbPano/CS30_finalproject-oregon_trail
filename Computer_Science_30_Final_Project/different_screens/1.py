@@ -1,50 +1,63 @@
+import window_creation as wc
 import pygame
+from os import path
+import time
 
-pygame.init()
+def name_leader(screen, width, height):
+    # title
+    font_dir = path.join(path.dirname(__file__), "Fonts")
+    font = pygame.font.Font(path.join(font_dir, 'ANDYB.TTF'), 50)
+    title = wc.Text("Leader's name:", width//2 - 195, height//3 - 175, (path.join(font_dir, 'ANDYB.TTF')), 50, (255, 255, 255), screen, bold=True)
+    title.draw(screen)
 
-# Define colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GRAY = (200, 200, 200, 200)
+    input_text = ""
+    input_font = pygame.font.Font(path.join(font_dir, 'ANDYB.TTF'), 40)
 
-# Initialize the game window
-screen_width, screen_height = 800, 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Hover Description Box")
+    cursor_visible = True
+    cursor_timer = 0
 
-# Create a font object
-font = pygame.font.Font(None, 30)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
-def draw_description_box(mouse_pos, button_rect):
-    x, y = mouse_pos
-    if button_rect.collidepoint(x, y):
-        description_text = font.render("This is a description box", True, BLACK)
-        description_box_rect = pygame.Rect(x, y - 30, description_text.get_width() + 10, description_text.get_height() + 10)
-        pygame.draw.rect(screen, GRAY, description_box_rect)
-        screen.blit(description_text, (x + 5, y - 25))
+            if event.type == pygame.KEYDOWN:
+                if event.unicode.isalpha() or event.key == pygame.K_SPACE:
+                    input_text += event.unicode
+                elif event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
+                print(input_text)
 
-# Game loop
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        screen.fill((0, 0, 0))
 
-    # Clear the screen
-    screen.fill(WHITE)
+        img = input_font.render(input_text, True, (255, 255, 255))
+        rect = img.get_rect()
+        rect.topleft = (300, 40)
 
-    # Create a button
-    button_rect = pygame.Rect(200, 200, 200, 100)
-    pygame.draw.rect(screen, BLACK, button_rect)
+        # Update cursor visibility
+        if time.time() - cursor_timer > 0.5:
+            cursor_visible = not cursor_visible
+            cursor_timer = time.time()
 
-    # Get the mouse position
-    mouse_pos = pygame.mouse.get_pos()
+        if cursor_visible:
+            cursor_rect = pygame.Rect(rect.topright, (3, rect.height))
+            pygame.draw.rect(screen, (255, 255, 255), cursor_rect)
 
-    # Draw the description box
-    draw_description_box(mouse_pos, button_rect)
+        screen.blit(img, rect)
+        title.draw(screen)
+        pygame.display.flip()
 
-    # Update the display
-    pygame.display.flip()
 
-# Quit the game
-pygame.quit()
+        
+        
+def naming(screen, width, height):
+    font_dir = path.join(path.dirname(__file__), "Fonts")
+    title = wc.Text("Enter your Leader's name", width/2, height/3 - 175, (path.join(font_dir, 'ANDYB.TTF')), 100, (255, 255, 255), screen, bold=True)
+    player_name = None
+    font = pygame.font.SysFont('Corbel', 40, bold=True)
+    name = font.render("Enter your name", True, (255, 140, 0))
+
+screen = pygame.display.set_mode((720, 720))
+width = screen.get_width()
+height = screen.get_height()
+name_leader(screen, width, height)
