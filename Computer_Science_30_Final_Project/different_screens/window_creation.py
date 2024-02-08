@@ -38,7 +38,7 @@ class Text():
         self.rect = text.get_rect(center=(self.x, self.y)) 
         screen = self.screen
         screen.blit(text, self.rect.topleft)
-
+    
 class Button():
     def __init__(self, x, y, width, height, border_colour, button_colour, screen):
         # initialize the button object with its properties
@@ -57,9 +57,21 @@ class Button():
     self.button_colour[2] + 20
     ))
         self.filled = self.original
+        self.isclicked = False
+
+        
+        #self.clicked = self.create(screen, self.border_colour, (
+    #self.button_colour[0] - 50,
+    #self.button_colour[1] - 50,
+    #self.button_colour[2] - 50
+    #    ))
         self.desc_box = False
         if self.desc_box == True:
             self.description = None 
+
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            isclicked = True   
     
 
     def create(self, screen, border_colour, button_colour):
@@ -89,9 +101,14 @@ class Button():
             #self.hover_desc(self.screen, self.description, pos)
         else:
             self.filled = self.original
-        
+
+
+        if self.isclicked:
+            self.filled = self.clicked
+
         if self.desc_box == True:
             self.hover_desc(self.screen, self.description, pos)
+            
     def draw(self, screen):
         # draw the button
         screen.blit(self.filled, self.rect)
@@ -113,6 +130,12 @@ class Button():
             for i, line in enumerate(lines):
                 line_text = font.render(line, True, (0, 0, 0))
                 screen.blit(line_text, (x + 5, y - box_height + 5 + i * 20))
+    
+    def click(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                return True
+        return False
 
 class Rectangle:
     def __init__(self, x, y, width, height, colour):
@@ -124,3 +147,57 @@ class Rectangle:
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.colour, (self.x, self.y, self.width, self.height))
+
+class Confirm:
+    def __init__(self, screen):
+        self.text = "Are you sure?"
+        self.width = 300
+        self.height = 180
+        self.x = screen.get_width() / 2
+        self.y = screen.get_height() / 2
+        self.colour = (54, 54, 54)
+        self.border_c = (80, 80, 80)
+        self.button_c = (101, 67, 33)
+        self.screen = screen
+        
+        
+    
+    def create(self, screen):
+        
+        #create rectangle for the confirmation box and two buttons in the box bellow the text
+        confirmation_box = Rectangle(self.x - self.width/2, self.y - self.height/2, self.width, self.height, self.colour)
+        confirmation_box.draw(screen)
+
+        # add the text
+        font = pygame.font.SysFont('Corbel', 30, bold=True)
+        text = font.render(self.text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=(self.x, self.y - 50))
+        screen.blit(text, text_rect)
+
+        # Create yes and no buttons in the box below the text but on the same x axis
+        yes_button = Button(self.x - self.width/2 + 15, self.y + self.height/2 - 60, 100, 50, self.border_c, self.button_c, screen)
+        self.yes_rect = yes_button.rect
+        yes_button.draw(screen)
+        yes_button.with_text('Yes', 'Corbel', 30, (255, 255, 255), screen, bold=True)
+        yes_button.update()  # Add this line to update the state of the "Yes" button
+
+        no_button = Button(self.x + self.width/2 - 115, self.y + self.height/2 - 60, 100, 50, self.border_c, self.button_c, screen)
+        self.no_rect = no_button.rect
+        no_button.draw(screen)
+        no_button.with_text('No', 'Corbel', 30, (255, 255, 255), screen, bold=True)
+        no_button.update()  # Add this line to update the state of the "No" button
+
+    def collide(self, screen):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.yes_rect.collidepoint(pygame.mouse.get_pos()):
+                    pygame.display.update()
+                    return 'Yes'
+                elif self.no_rect.collidepoint(pygame.mouse.get_pos()):
+                    pygame.display.update()
+                    return 'No'
+
+
+
